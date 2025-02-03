@@ -1,1 +1,121 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_GUESTS 100
+#define MAX_NAME_LENGTH 100
+
+// Structure to represent a guest
+struct Guest {
+    int id;
+    char name[MAX_NAME_LENGTH];
+    int room_no;
+    int stay_duration; // stay duration in days
+};
+
+// Array to store guest details
+struct Guest guests[MAX_GUESTS];
+int guest_count = 0;
+
+// Function to add a new guest
+void addGuest() {
+    if (guest_count >= MAX_GUESTS) {
+        printf("Sorry, the hotel is fully booked.\n");
+        return;
+    }
+
+    struct Guest new_guest;
+    new_guest.id = guest_count + 1;
+
+    printf("Enter guest name: ");
+    getchar(); // To consume any leftover newline character
+    fgets(new_guest.name, MAX_NAME_LENGTH, stdin);
+    new_guest.name[strcspn(new_guest.name, "\n")] = '\0'; // Remove trailing newline character
+
+    printf("Enter room number: ");
+    scanf("%d", &new_guest.room_no);
+
+    printf("Enter stay duration (in days): ");
+    scanf("%d", &new_guest.stay_duration);
+
+    guests[guest_count++] = new_guest;
+    printf("Guest added successfully!\n");
+}
+
+// Function to view all guests
+void viewGuests() {
+    if (guest_count == 0) {
+        printf("No guests currently.\n");
+        return;
+    }
+
+    printf("\nList of Guests:\n");
+    for (int i = 0; i < guest_count; i++) {
+        printf("Guest ID: %d\n", guests[i].id);
+        printf("Name: %s\n", guests[i].name);
+        printf("Room No: %d\n", guests[i].room_no);
+        printf("Stay Duration: %d days\n", guests[i].stay_duration);
+        printf("------------------------\n");
+    }
+}
+
+// Function to delete a guest by ID
+void deleteGuest() {
+    int guest_id;
+    printf("Enter the guest ID to remove: ");
+    scanf("%d", &guest_id);
+
+    int found = 0;
+    for (int i = 0; i < guest_count; i++) {
+        if (guests[i].id == guest_id) {
+            for (int j = i; j < guest_count - 1; j++) {
+                guests[j] = guests[j + 1];
+            }
+            guest_count--;
+            printf("Guest removed successfully.\n");
+            found = 1;
+            break;
+        }
+    }
+    if (!found) {
+        printf("Guest not found.\n");
+    }
+}
+
+// Main menu
+void menu() {
+    int choice;
+
+    do {
+        printf("\n*** Hotel Management System ***\n");
+        printf("1. Add Guest\n");
+        printf("2. View Guests\n");
+        printf("3. Remove Guest\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                addGuest();
+                break;
+            case 2:
+                viewGuests();
+                break;
+            case 3:
+                deleteGuest();
+                break;
+            case 4:
+                printf("Exiting... Goodbye!\n");
+                break;
+            default:
+                printf("Invalid choice, please try again.\n");
+        }
+    } while (choice != 4);
+}
+
+int main() {
+    menu();
+    return 0;
+}
 
